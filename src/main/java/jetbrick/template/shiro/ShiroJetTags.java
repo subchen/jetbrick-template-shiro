@@ -39,7 +39,7 @@ import org.apache.shiro.subject.Subject;
  */
 @JetAnnotations.Tags
 public final class ShiroJetTags {
-	
+
 	private static Subject getSubject() {
 		Subject subject = SecurityUtils.getSubject();
 		if (subject == null) {
@@ -47,7 +47,7 @@ public final class ShiroJetTags {
 		}
 		return subject;
 	}
-	
+
 	private static void printTagBody(JetTagContext ctx) throws IOException {
 		String body = ctx.getBodyContent();
 		ctx.getWriter().print(body);
@@ -75,17 +75,17 @@ public final class ShiroJetTags {
 			throws IOException {
 		final Subject subject = getSubject();
 
-		if (! subject.isPermitted(permission)) {
+		if (!subject.isPermitted(permission)) {
 			printTagBody(ctx);
 		}
 	}
-	
-	
+
 	/**
 	 * Displays body content only if the current user has one of the specified
 	 * roles from a list of role names.
 	 */
-	public static void has_any_role(JetTagContext ctx, String... roles) throws IOException {
+	public static void has_any_role(JetTagContext ctx, String... roles)
+			throws IOException {
 		final Subject subject = getSubject();
 
 		boolean show = false;
@@ -105,16 +105,16 @@ public final class ShiroJetTags {
 	 * Displays body content only if the current user does NOT have the
 	 * specified role (i.e. they explicitly lack the specified role)
 	 */
-	public static void lacks_role(JetTagContext ctx, String role) throws IOException {
+	public static void lacks_role(JetTagContext ctx, String role)
+			throws IOException {
 		final Subject subject = getSubject();
 
-		boolean show = ! subject.hasRole(role);
+		boolean show = !subject.hasRole(role);
 		if (show) {
 			printTagBody(ctx);
 		}
 	}
-	
-	
+
 	/**
 	 * Displays body content only if the current user has successfully
 	 * authenticated _during their current session_. It is more restrictive than
@@ -137,7 +137,7 @@ public final class ShiroJetTags {
 	public static void not_authenticated(JetTagContext ctx) throws IOException {
 		final Subject subject = getSubject();
 
-		boolean show = ! subject.isAuthenticated();
+		boolean show = !subject.isAuthenticated();
 		if (show) {
 			printTagBody(ctx);
 		}
@@ -202,8 +202,7 @@ public final class ShiroJetTags {
 	 */
 	public static void principal(JetTagContext ctx) throws IOException,
 			IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException
-	{
+			NoSuchMethodException {
 		principal(ctx, null);
 	}
 
@@ -221,7 +220,8 @@ public final class ShiroJetTags {
 			if (property == null) {
 				val = principal.toString();
 			} else {
-				val = PropertyUtils.getProperty(principal, property).toString();
+				Object propertyValue = PropertyUtils.getProperty(principal, property);
+				val = propertyValue != null ? propertyValue.toString() : "null";
 			}
 		}
 
